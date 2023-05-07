@@ -20,6 +20,10 @@ function novoTexto() {
 
 function atualizarTeste() {
     iniciar();
+
+    if (entrada.value == texto.textContent) {
+        verificar()
+    }
 }
 
 function iniciar() {
@@ -31,6 +35,46 @@ function iniciar() {
     }
 }
 
+function verificar() {
+    const tempoFinal = new Date().getTime();
+    const tempoInicial = parseInt(localStorage.getItem("tempoInicial"));
+    const tempoGasto = (tempoFinal - tempoInicial) / 1000;
+
+    resultado.textContent = `Parabéns! Você levou ${tempoGasto} segundos!`;
+
+    adicionarAoHistorico(texto.textContent, tempoGasto);
+
+    localStorage.setItem("testeEmAndamento", false);
+    entrada.value = "";
+    novoTexto();
+}
+
+function adicionarAoHistorico(textoDigitado, tempoGasto){
+    const itemHistorico = document.createElement("p");
+
+    itemHistorico.textContent = `Texto "${textoDigitado}" - Tempo: ${tempoGasto} segundos.`;
+
+    historico.appendChild(itemHistorico);
+}
+
+function reiniciarTeste() {
+    entrada.value = "";
+    resultado.textContent = "";
+    novoTexto();
+    localStorage.setItem("testeEmAndamento", false);
+    historico.innerHTML = "";
+}
+
+function alternarTema(){
+    const body = document.body
+
+    body.classList.toggle("claro");
+    body.classList.toggle("escuro");
+}
+
 entrada.addEventListener("keyup", atualizarTeste);
+reiniciar.addEventListener("click", reiniciarTeste);
+
+alternarTemaBtn.addEventListener("click", alternarTema);
 
 novoTexto();
